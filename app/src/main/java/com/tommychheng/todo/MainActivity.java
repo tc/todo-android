@@ -8,8 +8,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+	ArrayList<String> items;
+	ArrayAdapter<String> itemsAdapter;
+	ListView lvItems;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -18,14 +27,22 @@ public class MainActivity extends AppCompatActivity {
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-		fab.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Snackbar.make(view, "Add", Snackbar.LENGTH_LONG)
-						.setAction("Action", null).show();
-			}
-		});
+		lvItems = (ListView) findViewById(R.id.lvItems);
+		items = new ArrayList<>();
+		itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
+		lvItems.setAdapter(itemsAdapter);
+
+		items.add("first item");
+
+	}
+
+	public void onAddItem(View v) {
+		final EditText textEdit = (EditText) findViewById(R.id.etNewItem);
+
+		items.add(textEdit.getText().toString());
+		itemsAdapter.notifyDataSetChanged();
+
+		textEdit.setText("");
 	}
 
 	@Override

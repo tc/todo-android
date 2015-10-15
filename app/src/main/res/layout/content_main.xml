@@ -12,17 +12,34 @@
 	tools:showIn="@layout/activity_main"
 	tools:context=".MainActivity">
 
-	<TableLayout
+	<ListView
+		android:id="@+id/lvItems"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"
 
+	/>
 
-		<TableRow>
-			<TextView android:text="Hello World!"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content" />
-		</TableRow>
+	<EditText
+		android:id="@+id/etNewItem"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:hint="Add a new item"
+		android:layout_alignTop="@+id/btnAdd"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentBottom="true"
+		android:layout_toLeftOf="@+id/btnAdd"
+		/>
 
-	</TableLayout>
+	<Button android:id="@+id/btnAdd"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:onClick="onAddItem"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true"
+		android:text="Add" />
 
 </RelativeLayout>
