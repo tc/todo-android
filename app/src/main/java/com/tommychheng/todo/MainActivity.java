@@ -31,8 +31,10 @@ public class MainActivity extends AppCompatActivity {
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
+		TodoStore.setFilesDir(getFilesDir());
+
 		lvItems = (ListView) findViewById(R.id.lvItems);
-		items = readItems();
+		items = TodoStore.readItems();
 		itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
 		lvItems.setAdapter(itemsAdapter);
 
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 		final EditText textEdit = (EditText) findViewById(R.id.etNewItem);
 
 		itemsAdapter.add(textEdit.getText().toString());
-		writeItems();
+		TodoStore.writeItems(items);
 
 		textEdit.setText("");
 	}
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				items.remove(position);
 				itemsAdapter.notifyDataSetChanged();
-				writeItems();
+				TodoStore.writeItems(items);
 				return true;
 			}
 		});
@@ -82,30 +84,5 @@ public class MainActivity extends AppCompatActivity {
 		}
 
 		return super.onOptionsItemSelected(item);
-	}
-
-	private List<String> readItems() {
-		File filesDir = getFilesDir();
-		File todoFile = new File(filesDir, "todo.txt");
-
-		List<String> items;
-		try {
-			items = new ArrayList<String>(FileUtils.readLines(todoFile));
-		} catch (IOException e) {
-			items = new ArrayList<String>();
-		}
-
-		return items;
-	}
-
-	private void writeItems() {
-		File filesDir = getFilesDir();
-		File todoFile = new File(filesDir, "todo.txt");
-
-		try {
-			FileUtils.writeLines(todoFile, items);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 }
