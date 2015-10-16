@@ -1,22 +1,26 @@
 package com.tommychheng.todo;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.internal.widget.AdapterViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.*;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-	ArrayList<String> items;
+	List<String> items;
 	ArrayAdapter<String> itemsAdapter;
 	ListView lvItems;
 
@@ -28,21 +32,34 @@ public class MainActivity extends AppCompatActivity {
 		setSupportActionBar(toolbar);
 
 		lvItems = (ListView) findViewById(R.id.lvItems);
-		items = new ArrayList<>();
+		items = readItems();
 		itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
 		lvItems.setAdapter(itemsAdapter);
 
 		items.add("first item");
 
+		setupListViewListener();
 	}
 
 	public void onAddItem(View v) {
 		final EditText textEdit = (EditText) findViewById(R.id.etNewItem);
 
-		items.add(textEdit.getText().toString());
-		itemsAdapter.notifyDataSetChanged();
+		itemsAdapter.add(textEdit.getText().toString());
+		writeItems();
 
 		textEdit.setText("");
+	}
+
+	public void setupListViewListener() {
+		lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				items.remove(position);
+				itemsAdapter.notifyDataSetChanged();
+				writeItems();
+				return true;
+			}
+		});
 	}
 
 	@Override
@@ -65,5 +82,30 @@ public class MainActivity extends AppCompatActivity {
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	private List<String> readItems() {
+		File filesDir = getFilesDir();
+		File todoFile = new File(filesDir, "todo.txt");
+
+		List<String> items;
+		try {
+			items = new ArrayList<String>(FileUtils.readLines(todoFile));
+		} catch (IOException e) {
+			items = new ArrayList<String>();
+		}
+
+		return items;
+	}
+
+	private void writeItems() {
+		File filesDir = getFilesDir();
+		File todoFile = new File(filesDir, "todo.txt");
+
+		try {
+			FileUtils.writeLines(todoFile, items);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
