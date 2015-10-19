@@ -1,34 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:paddingLeft="@dimen/activity_horizontal_margin"
-	android:paddingRight="@dimen/activity_horizontal_margin"
-	android:paddingTop="@dimen/activity_vertical_margin"
-	android:paddingBottom="@dimen/activity_vertical_margin"
-	app:layout_behavior="@string/appbar_scrolling_view_behavior"
-	tools:showIn="@layout/activity_main"
-	tools:context=".MainActivity">
+	android:fitsSystemWindows="true"
+	tools:context=".EditActivity">
 
-	<EditText
-		android:id="@+id/etItem"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignTop="@+id/btnSave"
-		android:layout_alignParentLeft="true"
-		android:layout_alignParentBottom="true"
-		android:layout_toLeftOf="@+id/btnSave"
-		/>
+	<android.support.design.widget.AppBarLayout android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:theme="@style/AppTheme.AppBarOverlay">
 
-	<Button android:id="@+id/btnSave"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:onClick="onSaveItem"
-		android:layout_alignParentBottom="true"
-		android:layout_alignParentRight="true"
-		android:layout_alignParentEnd="true"
-		android:text="Save" />
+		<android.support.v7.widget.Toolbar android:id="@+id/toolbar"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			android:background="?attr/colorPrimary"
+			app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-</RelativeLayout>
+	</android.support.design.widget.AppBarLayout>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:paddingLeft="@dimen/activity_horizontal_margin"
+		android:paddingRight="@dimen/activity_horizontal_margin"
+		android:paddingTop="@dimen/activity_vertical_margin"
+		android:paddingBottom="@dimen/activity_vertical_margin">
+
+		<EditText
+			android:id="@+id/etItem"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignTop="@+id/btnSave"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentBottom="true"
+			android:layout_toLeftOf="@+id/btnSave"
+			/>
+
+		<Button android:id="@+id/btnSave"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:onClick="onSave"
+			android:layout_alignParentBottom="true"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:text="Save" />
+
+
+	</RelativeLayout>
+
+
+
+</android.support.design.widget.CoordinatorLayout>

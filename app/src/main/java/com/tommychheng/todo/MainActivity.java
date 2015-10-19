@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+	final int EDIT_ITEM_CODE = 21;
 	List<String> items;
 	ArrayAdapter<String> itemsAdapter;
 	ListView lvItems;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 		TodoStore.setFilesDir(getFilesDir());
 
 		lvItems = (ListView) findViewById(R.id.lvItems);
-		items = TodoStore.readItems();
+		items = TodoStore.load();
 		itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
 		lvItems.setAdapter(itemsAdapter);
 
@@ -43,22 +44,57 @@ public class MainActivity extends AppCompatActivity {
 		setupListViewListener();
 	}
 
+	public void launchEditItem(int index) {
+		// first parameter is the context, second is the class of the activity to launch
+		Intent i = new Intent(MainActivity.this, EditActivity.class);
+		i.putExtra("item", items.get(index));
+		startActivityForResult(i, EDIT_ITEM_CODE);
+	}
+
 	public void onAddItem(View v) {
 		final EditText textEdit = (EditText) findViewById(R.id.etNewItem);
 
-		itemsAdapter.add(textEdit.getText().toString());
-		TodoStore.writeItems(items);
+		String value = textEdit.getText().toString();
+
+		if(!value.isEmpty()) {
+			itemsAdapter.add(value);
+			TodoStore.setItems(items);
+			TodoStore.save();
+			itemsAdapter.notifyDataSetChanged();
+		}
 
 		textEdit.setText("");
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// REQUEST_CODE is defined above
+		if (resultCode == RESULT_OK && requestCode == EDIT_ITEM_CODE) {
+			String item = data.getExtras().getString("item");
+			int index = data.getExtras().getInt("index");
+
+			TodoStore.setItem(index, item);
+			itemsAdapter.notifyDataSetChanged();
+
+			Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+		}
+	}
 	public void setupListViewListener() {
+		lvItems.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				launchEditItem(position);
+			}
+		});
+
 		lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				items.remove(position);
 				itemsAdapter.notifyDataSetChanged();
-				TodoStore.writeItems(items);
+				TodoStore.setItems(items);
+				TodoStore.save();
+
 				return true;
 			}
 		});
